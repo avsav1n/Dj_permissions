@@ -1,0 +1,147 @@
+# примеры API-запросов
+
+@baseUrl = http://localhost:8000/api
+@admin = bbc954e3145087f982e9684ee3926cb64b6b5565
+@admin-2 = 1c181e96e2a0fb4f98873d5d9aa1ea61d0cd5721
+
+# получение объявлений аноним
+GET {{baseUrl}}/advertisements/
+Content-Type: application/json
+
+###
+
+# получение объявлений владелец
+GET {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{admin}}
+
+###
+
+# получение объявлений НЕ владелец
+GET {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{admin-2}}
+
+###
+
+# создание объявления аноним
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+
+{
+  "title": "Шкаф IKEA",
+  "description": "Срочно"
+}
+
+###
+
+# создание объявления владелец
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{admin}}
+
+{
+  "title": "Шкаф IKEA",
+  "description": "Срочно"
+}
+
+###
+
+@adv_id = 35
+
+# попытка поменять объявление НЕ владелец
+PATCH {{baseUrl}}/advertisements/{{adv_id}}/
+Content-Type: application/json
+Authorization: Token {{admin-2}}
+
+{
+  "status": "CLOSED"
+}
+
+###
+
+# попытка поменять объявление владелец
+PATCH {{baseUrl}}/advertisements/{{adv_id}}/
+Content-Type: application/json
+Authorization: Token {{admin}}
+
+{
+  "status": "CLOSED"
+}
+
+###
+
+# удаление объекта НЕ владелец
+DELETE {{baseUrl}}/advertisements/{{adv_id}}/
+Content-Type: application/json
+Authorization: Token {{admin-2}}
+
+###
+
+# удаление объекта владелец
+DELETE {{baseUrl}}/advertisements/{{adv_id}}/
+Content-Type: application/json
+Authorization: Token {{admin}}
+
+###
+
+# фильтрация по создателю
+GET {{baseUrl}}/advertisements/?creator=1
+Content-Type: application/json
+
+###
+
+# фильтрация по создателю c авторизацией
+GET {{baseUrl}}/advertisements/?creator=1
+Content-Type: application/json
+Authorization: Token {{admin}}
+
+###
+
+# фильтрация по дате
+GET {{baseUrl}}/advertisements/?created_at_after=2020-10-01
+Content-Type: application/json
+
+###
+
+# фильтрация по дате
+GET {{baseUrl}}/advertisements/?created_at_before=2020-10-01
+Content-Type: application/json
+
+###
+
+# фильтрация по статусу
+GET {{baseUrl}}/advertisements/?status=CLOSED
+Content-Type: application/json
+
+###
+
+# получение токена
+POST http://localhost:8000/api-token-auth/
+Content-Type: application/json
+
+{
+    "username": "admin-2",
+    "password": "admin"
+}
+
+###
+
+# добавление в избранное
+POST {{baseUrl}}/advertisements/27/favorites/
+Content-Type: application/json
+Authorization: Token {{admin-2}}
+
+###
+
+# просмотр избранного
+GET {{baseUrl}}/advertisements/favorites/
+Content-Type: application/json
+Authorization: Token {{admin-2}}
+
+###
+
+# фильтрация по избранным объявлениям
+GET {{baseUrl}}/advertisements/favorites/?status=CLOSED
+Content-Type: application/json
+Authorization: Token {{admin-2}}
