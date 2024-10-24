@@ -8,7 +8,5 @@ class IsOwnerOrAdmin(permissions.BasePermission):
     message = 'У Вас нет прав на удаление и изменение чужого заказа'
     
     def has_object_permission(self, request, view, obj):
-        if request.user.is_staff and request.method in ('DELETE', 'PATCH'):
-            return True
-        return request.user == obj.creator
+        return request.user == obj.creator or request.user.is_staff
 
